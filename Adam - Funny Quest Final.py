@@ -40,7 +40,8 @@ savedvars = []
 
 def stopmusic(track):
     winsound.PlaySound(None, winsound.SND_PURGE)
-    winsound.PlaySound(track, winsound.SND_ASYNC)
+    if track is not None:
+        winsound.PlaySound(track, winsound.SND_ASYNC)
 
 
 def startmusic(track):
@@ -598,7 +599,7 @@ def startbattle():
         firstload = False
     # This is the boss fight
     if difficulty >= 30:
-        stopmusic("GRASSY MOUNTAIN.wav")
+        stopmusic(None)
         startmusic("QUESTING.wav")
         thisbattle = [enemyTypes[-1], enemyTypes[-2], enemyTypes[-2], enemyTypes[-2]]
     for a in range(len(thisbattle)):
