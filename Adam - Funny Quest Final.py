@@ -318,10 +318,10 @@ coinb2.up()
 # Revenge charges based on the amount of damage you take, and lets you unleash a special attack when at max
 gameClasses = [
     # name,     mhp, r, s, d, l,  cr
-    ("warrior", 15, 13, 4, 1, 8, 0),
-    ("archer", 13, 7, 5, 0, 20, 0),
-    ("king", 12, 9, 3, 2, 15, 0),
-    ("doctor", 10, 7, 2, 1, 18, 0)]
+    ("warrior", 14, 18, 4, 0, 8, 0),
+    ("archer", 12, 23, 3, 0, 20, 0),
+    ("king", 11, 22, 3, 1, 15, 0),
+    ("doctor", 13, 15, 2, 0, 18, 0)]
 allitems = [
     "RedPotion",
     "GoldenArrow",
@@ -358,12 +358,15 @@ itemdesc = [
         "Sharper sword (Warrior)",
         "Shield (Warrior)",
         "Gold sword (Warrior)",
+
         "Bronze arrows (Archer)",
         "Iron arrows (Archer)",
         "Diamond arrows (Archer)",
+
         "Shinier chalice (King)",
         "Shinier crown (King)",
         "Platinum crown (King)",
+
         "Acidic potions (Doctor)",
         "Stronger potions (Doctor)",
         "Strongest potions (Doctor)",
@@ -381,35 +384,38 @@ itemdesc = [
         "Heals both characters by 7 hp.",
 
         " +1 attack \n +5 luck",
-        " +1 defense \n +5 max hp",
-        " +2 attack \n +10 luck",
+        " +1 defense \n +3 max hp",
+        " +1 attack \n +10 luck \n +3 max hp",
+
         " +1 attack \n +2 max hp",
         " +1 attack \n +3 max hp",
-        " +1 attack \n +1 defense \n +5 luck",
-        " +2 attack \n +4 max hp",
-        " +1 defense \n +7 max hp",
-        " +1 attack \n +2 defense \n +5 luck",
-        " +3 attack",
-        " +2 attack \n +1 defense",
-        " +2 attack \n +3 max hp",
+        " +2 attack \n +2 max hp \n +5 luck",
+
+        " +1 attack \n +5 luck",
+        " +1 attack \n +1 defense",
+        " +1 attack \n +2 defense \n +2 max hp",
+
+        " +2 attack",
+        " +1 attack \n +1 defense",
+        " +3 attack \n +3 max hp",
 
         "Deals 4 damage to all enemies.",
         "Hits three enemies for 5 damage, ignoring defense.",
         "+1 defense to both characters for this battle.",
-        "Deals 14 damage to one enemy.",
-        "+4 defense to this character for one battle"
+        "Deals 10 damage to one enemy.",
+        "+3 defense to this character for one battle"
     ]
 ]
 # List of all enemies
 # Order: name, hp, max hp, gold, strength, defense, lethality , difficulty(MUST BE AT END)
 # lethality is the odds the enemy will attack the character with less health
 enemyTypes = [
-    # name,  hp, mhp, g, s, d, l , di
-    ("ant", 4, 4, 1, 3, 1, 20, 1),
-    ("slime", 10, 10, 2, 3, 0, 50, 2),
-    ("rat", 8, 8, 2, 4, 0, 0, 4),
-    ("bandit", 10, 10, 5, 5, 1, 60, 7),
-    ("bat", 15, 15, 4, 4, 1, 70, 8),
+    # name, hp,mhp,g,s, d, l ,di
+    ("ant", 3, 3, 1, 2, 1, 20, 1),
+    ("slime", 8, 8, 2, 3, 0, 50, 2),
+    ("rat", 6, 6, 2, 5, 0, 0, 4),
+    ("bandit", 10, 10, 6, 6, 1, 60, 7),
+    ("bat", 16, 16, 6, 5, 1, 70, 8),
     ("bee", 20, 20, 8, 5, 2, 0, 100),
     ("big bee", 42, 42, 100, 8, 1, 80, 200)
 ]
@@ -486,6 +492,14 @@ def writetext(colour, speed, font, section, trail, textobj, text):
 # Determines which class the two characters will be and sets their stats
 #####
 if loadfile == "n":
+
+    #####
+    # These 2 lines let you choose the starting characters 
+    #####
+    if debug:
+        allStats[0] = gameClasses[0]
+        allStats[1] = gameClasses[1]
+
     while allStats[0] == allStats[1] or allStats[0] == [] or allStats[1] == []:
         try:
             allStats[allStats.index([])] = random.choice(gameClasses)
@@ -1208,9 +1222,9 @@ def useitemb(x, y):
             restartloop()
             if not eselected:
                 return
-            miscattack(0.3, 0.6, target, 14, False)
+            miscattack(0.3, 0.6, target, 10, False)
         elif itemcho == "Goop":
-            miscbuff(allfighters[turnnum], "defense", 4, 0.4)
+            miscbuff(allfighters[turnnum], "defense", 3, 0.4)
         bagitems.remove(itemcho)
     closemenu(2)
     eselected = False
@@ -1238,7 +1252,7 @@ def userevenge(x, y):
         miscattack(0.25, 0.75, allfighters[2:len(allfighters)], allfighters[turnnum][4] * 2 - 3, False)
     # King revenge
     if allfighters[turnnum][0] == gameClasses[2][0]:
-        miscbuff(allfighters[turnnum % 1], "defense", (difficulty // 7) + 1, 1)
+        miscbuff(allfighters[turnnum % 1], "defense", (difficulty // 12) + 1, 1)
     # Doctor revenge
     if allfighters[turnnum][0] == gameClasses[3][0]:
         mischeal(allfighters[0:2], allfighters[turnnum][4] * 3 + 4, 0.75, True)
@@ -1266,11 +1280,11 @@ curshopitems = []
 # "Bomb",
 # "Goop"
 goldcosts = [
-    10, 15, 25,
-    8, 14, 20,
-    9, 18, 20,
+    8, 15, 20,
+    10, 20, 25,
+    9, 17, 26,
     10, 18, 22,
-    5, 12, 8, 18, 25
+    3, 10, 8, 7, 25
 
 ]
 
@@ -1393,6 +1407,7 @@ def checkgold(x, y):
     elif itemcho in allitems:
         itemdescText.clear()
         # name, hp, mhp, r, s, d, l, cr
+        # 0,    1,  2,   3, 4, 5, 6, 7
 
         if itemx == 4:
             if char1Stats[0] == "warrior":
@@ -1418,11 +1433,13 @@ def checkgold(x, y):
                 char2Upgrades.remove("WarriorUpgrade2")
         elif itemx == 6:
             if char1Stats[0] == "warrior":
-                char1Stats[4] += 2
+                char1Stats[4] += 1
                 char1Stats[6] += 10
+                char1Stats[2] += 3
             else:
-                char2Stats[4] += 2
+                char2Stats[4] += 1
                 char2Stats[6] += 10
+                char2Stats[2] += 3
             try:
                 char1Upgrades.remove("WarriorUpgrade3")
             except ValueError:
@@ -1451,35 +1468,35 @@ def checkgold(x, y):
                 char2Upgrades.remove("ArcherUpgrade2")
         elif itemx == 9:
             if char1Stats[0] == "archer":
-                char1Stats[4] += 1
-                char1Stats[5] += 1
-                char1Stats[6] += 10
+                char1Stats[4] += 2
+                char1Stats[2] += 2
+                char1Stats[6] += 5
             else:
-                char2Stats[4] += 1
-                char2Stats[5] += 1
-                char2Stats[6] += 10
+                char2Stats[4] += 2
+                char2Stats[2] += 2
+                char2Stats[6] += 5
             try:
                 char1Upgrades.remove("ArcherUpgrade3")
             except ValueError:
                 char2Upgrades.remove("ArcherUpgrade3")
         elif itemx == 10:
             if char1Stats[0] == "king":
-                char1Stats[4] += 2
-                char1Stats[2] += 4
+                char1Stats[4] += 1
+                char1Stats[6] += 5
             else:
-                char2Stats[4] += 2
-                char2Stats[2] += 4
+                char2Stats[4] += 1
+                char2Stats[6] += 5
             try:
                 char1Upgrades.remove("KingUpgrade1")
             except ValueError:
                 char2Upgrades.remove("KingUpgrade1")
         elif itemx == 11:
             if char1Stats[0] == "king":
+                char1Stats[4] += 1
                 char1Stats[5] += 1
-                char1Stats[2] += 7
             else:
+                char2Stats[4] += 1
                 char2Stats[5] += 1
-                char2Stats[2] += 7
             try:
                 char1Upgrades.remove("KingUpgrade2")
             except ValueError:
@@ -1488,11 +1505,11 @@ def checkgold(x, y):
             if char1Stats[0] == "king":
                 char1Stats[4] += 1
                 char1Stats[5] += 2
-                char1Stats[6] += 5
+                char1Stats[2] += 2
             else:
                 char2Stats[4] += 1
                 char2Stats[5] += 2
-                char2Stats[6] += 5
+                char2Stats[2] += 2
             try:
                 char1Upgrades.remove("KingUpgrade3")
             except ValueError:
